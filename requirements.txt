@@ -1,0 +1,9 @@
+Flask
+Flask-SocketIO
+python-dotenv
+supabase
+google-generativeai
+openai
+gunicorn
+eventlet
+
