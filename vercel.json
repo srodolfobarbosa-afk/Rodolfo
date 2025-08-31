@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/",
+      "dest": "/api/chat"
+    },
+    {
       "src": "/(.*)",
       "dest": "wsgi.py"
     }
