@@ -6,7 +6,6 @@ google-generativeai
 openai
 gunicorn
 eventlet
-
-
 Flask-Cors
+
 
