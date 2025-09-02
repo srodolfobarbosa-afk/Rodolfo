@@ -585,3 +585,27 @@ def eco_explorer_history():
         return jsonify({"error": f"Erro ao consultar histórico do Eco-Explorer: {str(e)}"}), 500
 
 
+
+
+from app.eco_writer import EcoWriter
+
+@chat_bp.route("/api/eco-writer/generate", methods=["POST"])
+def eco_writer_generate():
+    """Endpoint para o Eco-Writer gerar conteúdo"""
+    data = request.get_json()
+    topic = data.get("topic")
+    length = data.get("length", "médio")
+    style = data.get("style", "informativo")
+    
+    if not topic:
+        return jsonify({"error": "O tópico é obrigatório para a geração de conteúdo"}), 400
+
+    try:
+        writer = EcoWriter()
+        result = writer.generate_content(topic, length, style)
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Erro durante a geração de conteúdo pelo Eco-Writer: {str(e)}"}), 500
+
+
