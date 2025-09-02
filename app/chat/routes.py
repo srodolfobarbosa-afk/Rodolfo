@@ -708,3 +708,48 @@ def marketplace_update_agent_status(agent_id):
         return jsonify({"error": f"Erro ao atualizar status do agente no marketplace: {str(e)}"}), 500
 
 
+
+
+from app.dashboard import Dashboard
+
+@chat_bp.route("/api/dashboard/kpis", methods=["GET"])
+def dashboard_kpis():
+    """Endpoint para obter os KPIs do dashboard executivo"""
+    try:
+        dashboard = Dashboard()
+        kpis = dashboard.get_kpis()
+        return jsonify(kpis)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao obter KPIs do dashboard: {str(e)}"}), 500
+
+@chat_bp.route("/api/dashboard/agent-performance-summary", methods=["GET"])
+def dashboard_agent_performance_summary():
+    """Endpoint para obter o resumo de performance dos agentes"""
+    try:
+        dashboard = Dashboard()
+        summary = dashboard.get_agent_performance_summary()
+        return jsonify(summary)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao obter resumo de performance dos agentes: {str(e)}"}), 500
+
+@chat_bp.route("/api/dashboard/tokenomics-summary", methods=["GET"])
+def dashboard_tokenomics_summary():
+    """Endpoint para obter o resumo de tokenomics"""
+    try:
+        dashboard = Dashboard()
+        summary = dashboard.get_tokenomics_summary()
+        return jsonify(summary)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao obter resumo de tokenomics: {str(e)}"}), 500
+
+@chat_bp.route("/api/dashboard/market-intelligence-summary", methods=["GET"])
+def dashboard_market_intelligence_summary():
+    """Endpoint para obter o resumo de inteligência de mercado"""
+    try:
+        dashboard = Dashboard()
+        summary = dashboard.get_market_intelligence_summary()
+        return jsonify(summary)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao obter resumo de inteligência de mercado: {str(e)}"}), 500
+
+
