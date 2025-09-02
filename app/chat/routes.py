@@ -545,3 +545,26 @@ def web_search():
         return jsonify({"error": f"Erro durante a automação da web: {str(e)}"}), 500
 
 
+
+
+from app.eco_explorer import EcoExplorer
+
+@chat_bp.route("/api/eco-explorer-search", methods=["POST"])
+def eco_explorer_search():
+    """Endpoint para o Eco-Explorer realizar buscas na web e analisar dados"""
+    data = request.get_json()
+    query = data.get("query")
+    search_url = data.get("url", "https://www.google.com")
+    
+    if not query:
+        return jsonify({"error": "A consulta de pesquisa é obrigatória"}), 400
+
+    try:
+        explorer = EcoExplorer()
+        result = explorer.search_and_analyze(query, search_url)
+        
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Erro durante a busca do Eco-Explorer: {str(e)}"}), 500
+
+
