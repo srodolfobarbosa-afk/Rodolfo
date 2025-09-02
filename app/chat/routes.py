@@ -519,3 +519,29 @@ def compliance_check():
         return jsonify({"error": f"Erro no sistema de conformidade: {str(e)}"}), 500
 
 
+
+
+from app.web_automation import WebAgent
+
+@chat_bp.route("/api/web-search", methods=["POST"])
+def web_search():
+    """Endpoint para realizar pesquisas na web de forma autônoma"""
+    data = request.get_json()
+    query = data.get("query")
+    url = data.get("url", "https://www.google.com")
+    
+    if not query:
+        return jsonify({"error": "A consulta de pesquisa é obrigatória"}), 400
+
+    try:
+        agent = WebAgent()
+        agent.navigate(url)
+        agent.search(query, "textarea[name=\'q\']")
+        results = agent.get_text_by_selector("h3")
+        agent.close()
+        
+        return jsonify({"query": query, "results": results})
+    except Exception as e:
+        return jsonify({"error": f"Erro durante a automação da web: {str(e)}"}), 500
+
+
