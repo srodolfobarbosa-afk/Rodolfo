@@ -1,8 +1,11 @@
 from flask import Flask
 from flask_socketio import SocketIO
 from flask_cors import CORS
+from apscheduler.schedulers.background import BackgroundScheduler
+from app.eco_explorer import EcoExplorer
 
 socketio = SocketIO()
+scheduler = BackgroundScheduler()
 
 def create_app():
     app = Flask(__name__)
@@ -31,6 +34,18 @@ def create_app():
     @app.route("/api/ping", methods=["GET"])
     def ping():
         return "pong", 200
+
+    # Agendamento do Eco-Explorer
+    def scheduled_eco_explorer_search():
+        explorer = EcoExplorer()
+        # Exemplo de busca: pode ser configurado para buscar diferentes tópicos
+        print("Executando busca agendada do Eco-Explorer...")
+        result = explorer.search_and_analyze("novas tecnologias de energia renovável")
+        print(f"Busca agendada concluída. Status: {result.get('status')}")
+
+    if not scheduler.running:
+        scheduler.add_job(scheduled_eco_explorer_search, 'interval', minutes=60) # Executa a cada 60 minutos
+        scheduler.start()
 
     return app
 
