@@ -658,3 +658,53 @@ def tokenomics_transfer():
         return jsonify({"error": f"Erro ao simular transferência de tokens: {str(e)}"}), 500
 
 
+
+
+from app.marketplace import Marketplace
+
+@chat_bp.route("/api/marketplace/agents", methods=["GET"])
+def marketplace_list_agents():
+    """Endpoint para listar agentes no marketplace"""
+    try:
+        marketplace = Marketplace()
+        agents = marketplace.list_agents()
+        return jsonify(agents)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao listar agentes do marketplace: {str(e)}"}), 500
+
+@chat_bp.route("/api/marketplace/agents", methods=["POST"])
+def marketplace_add_agent():
+    """Endpoint para adicionar um novo agente ao marketplace"""
+    data = request.get_json()
+    name = data.get("name")
+    description = data.get("description")
+    price = data.get("price", type=float)
+    token_id = data.get("token_id")
+
+    if not name or not description or not price or not token_id:
+        return jsonify({"error": "Nome, descrição, preço e token_id são obrigatórios"}), 400
+
+    try:
+        marketplace = Marketplace()
+        result = marketplace.add_agent(name, description, price, token_id)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao adicionar agente ao marketplace: {str(e)}"}), 500
+
+@chat_bp.route("/api/marketplace/agents/<int:agent_id>/status", methods=["PUT"])
+def marketplace_update_agent_status(agent_id):
+    """Endpoint para atualizar o status de um agente no marketplace"""
+    data = request.get_json()
+    status = data.get("status")
+
+    if not status:
+        return jsonify({"error": "Status é obrigatório"}), 400
+
+    try:
+        marketplace = Marketplace()
+        result = marketplace.update_agent_status(agent_id, status)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao atualizar status do agente no marketplace: {str(e)}"}), 500
+
+
