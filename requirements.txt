@@ -5,5 +5,7 @@ gunicorn
 python-dotenv
 google-generativeai
 openai
+supabase
+eventlet
 
 

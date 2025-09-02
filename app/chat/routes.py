@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template_string, jsonify, request
 from flask_socketio import emit
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from ia_router import ia_router
 from supabase_client import supabase_manager
-import os
 from app import socketio
 
 chat_bp = Blueprint("chat", __name__)
