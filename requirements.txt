@@ -1,11 +1,9 @@
 Flask
+Flask-Cors
 Flask-SocketIO
+gunicorn
 python-dotenv
-supabase
 google-generativeai
 openai
-gunicorn
-eventlet
-Flask-Cors
 
 
