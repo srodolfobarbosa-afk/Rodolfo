@@ -1,10 +1,6 @@
 from flask import Blueprint, render_template_string, jsonify, request
 from flask_socketio import emit
-import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from ia_router import ia_router
-from supabase_client import supabase_manager
 from app import socketio
 
 chat_bp = Blueprint("chat", __name__)
@@ -20,26 +16,11 @@ def handle_message(data):
     user_message = data["message"]
     agent_id = data["agent_id"]
 
-    # Buscar informações do agente no Supabase
-    agent_info = supabase_manager.get_agent_by_id(agent_id)
+    # Resposta simples para teste
+    agent_response = f"Olá! Sou o agente {agent_id}. Recebi sua mensagem: '{user_message}'. Como posso ajudá-lo com questões ambientais?"
 
-    if agent_info:
-        agent_name = agent_info["name"]
-        system_prompt = agent_info["system_prompt"]
-
-        # Gerar resposta com IA real
-        agent_response = ia_router.generate_response(
-            user_message,
-            agent_name,
-            system_prompt,
-            provider_preference=os.getenv("NEXO_LLM_PROVIDER")  # Usar provedor preferencial
-        )
-
-        # Salvar no Supabase
-        supabase_manager.save_message(agent_id, user_message, agent_response)
-
-        # Enviar resposta
-        socketio.emit("agent_response", {"message": agent_response})
+    # Enviar resposta
+    socketio.emit("agent_response", {"message": agent_response})
 
 # Rotas da API
 @chat_bp.route("/")
@@ -65,35 +46,28 @@ def send_message():
         if not user_message:
             return jsonify({"error": "Mensagem é obrigatória"}), 400
 
-        # Buscar informações do agente no Supabase
-        agent_info = supabase_manager.get_agent_by_id(agent_id)
+        # Resposta simples baseada no agente selecionado
+        agent_responses = {
+            "nexo_genesis": f"Olá! Sou o Nexo Gênesis, o agente principal do EcoGuardians. Recebi sua mensagem: '{user_message}'. Como criador de outros agentes, posso ajudá-lo a encontrar soluções ambientais inovadoras!",
+            "ecofinanceiro": f"Olá! Sou o EcoFinanceiro, especialista em finanças sustentáveis. Sobre sua pergunta: '{user_message}' - posso ajudá-lo com investimentos verdes, economia circular e sustentabilidade financeira!",
+            "ecosofia": f"Olá! Sou a EcoSofia, especialista em sabedoria ecológica. Sua mensagem: '{user_message}' - me inspira a compartilhar conhecimentos sobre harmonia com a natureza e práticas sustentáveis!",
+            "assistente_ecologico": f"Olá! Sou o Assistente Ecológico. Recebi sua mensagem: '{user_message}'. Estou aqui para ajudá-lo com questões ambientais gerais e práticas sustentáveis do dia a dia!"
+        }
 
-        if agent_info:
-            agent_name = agent_info["name"]
-            system_prompt = agent_info["system_prompt"]
+        agent_response = agent_responses.get(agent_id, f"Olá! Recebi sua mensagem: '{user_message}'. Como posso ajudá-lo com questões ambientais?")
+        
+        agent_names = {
+            "nexo_genesis": "Nexo Gênesis",
+            "ecofinanceiro": "EcoFinanceiro", 
+            "ecosofia": "EcoSofia",
+            "assistente_ecologico": "Assistente Ecológico"
+        }
 
-            # Gerar resposta com IA real
-            agent_response = ia_router.generate_response(
-                user_message,
-                agent_name,
-                system_prompt,
-                provider_preference=os.getenv("NEXO_LLM_PROVIDER", "google")
-            )
-
-            # Salvar no Supabase
-            supabase_manager.save_message(agent_id, user_message, agent_response)
-
-            return jsonify({
-                "response": agent_response,
-                "agent": agent_name,
-                "session_id": session_id
-            })
-        else:
-            return jsonify({
-                "response": f"Olá! Sou um assistente EcoGuardians. Como posso ajudá-lo hoje?",
-                "agent": "EcoGuardians Assistant",
-                "session_id": session_id
-            })
+        return jsonify({
+            "response": agent_response,
+            "agent": agent_names.get(agent_id, "EcoGuardians Assistant"),
+            "session_id": session_id
+        })
 
     except Exception as e:
         return jsonify({"error": f"Erro interno: {str(e)}"}), 500
