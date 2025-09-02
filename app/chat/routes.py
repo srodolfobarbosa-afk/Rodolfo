@@ -609,3 +609,52 @@ def eco_writer_generate():
         return jsonify({"error": f"Erro durante a geração de conteúdo pelo Eco-Writer: {str(e)}"}), 500
 
 
+
+
+from app.tokenomics import Tokenomics
+
+@chat_bp.route("/api/tokenomics/info", methods=["GET"])
+def tokenomics_info():
+    """Endpoint para obter informações sobre o token ECG"""
+    try:
+        tokenomics = Tokenomics()
+        info = tokenomics.get_token_info()
+        return jsonify(info)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao obter informações do tokenomics: {str(e)}"}), 500
+
+@chat_bp.route("/api/tokenomics/burn", methods=["POST"])
+def tokenomics_burn():
+    """Endpoint para simular a queima de tokens ECG"""
+    data = request.get_json()
+    amount = data.get("amount", type=int)
+
+    if not amount:
+        return jsonify({"error": "A quantidade para queimar é obrigatória"}), 400
+
+    try:
+        tokenomics = Tokenomics()
+        result = tokenomics.simulate_burn(amount)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao simular queima de tokens: {str(e)}"}), 500
+
+@chat_bp.route("/api/tokenomics/transfer", methods=["POST"])
+def tokenomics_transfer():
+    """Endpoint para simular a transferência de tokens ECG"""
+    data = request.get_json()
+    sender = data.get("sender")
+    receiver = data.get("receiver")
+    amount = data.get("amount", type=int)
+
+    if not sender or not receiver or not amount:
+        return jsonify({"error": "Remetente, destinatário e quantidade são obrigatórios"}), 400
+
+    try:
+        tokenomics = Tokenomics()
+        result = tokenomics.simulate_transfer(sender, receiver, amount)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"Erro ao simular transferência de tokens: {str(e)}"}), 500
+
+
