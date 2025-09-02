@@ -52,6 +52,50 @@ def serve_css():
 def serve_js():
     return JS_TEMPLATE, 200, {"Content-Type": "application/javascript"}
 
+@chat_bp.route("/send", methods=["POST"])
+def send_message():
+    try:
+        data = request.get_json()
+        user_message = data.get("message")
+        agent_id = data.get("agent_id", "nexo_genesis")
+        session_id = data.get("session_id", "default")
+
+        if not user_message:
+            return jsonify({"error": "Mensagem é obrigatória"}), 400
+
+        # Buscar informações do agente no Supabase
+        agent_info = supabase_manager.get_agent_by_id(agent_id)
+
+        if agent_info:
+            agent_name = agent_info["name"]
+            system_prompt = agent_info["system_prompt"]
+
+            # Gerar resposta com IA real
+            agent_response = ia_router.generate_response(
+                user_message,
+                agent_name,
+                system_prompt,
+                provider_preference=os.getenv("NEXO_LLM_PROVIDER", "google")
+            )
+
+            # Salvar no Supabase
+            supabase_manager.save_message(agent_id, user_message, agent_response)
+
+            return jsonify({
+                "response": agent_response,
+                "agent": agent_name,
+                "session_id": session_id
+            })
+        else:
+            return jsonify({
+                "response": f"Olá! Sou um assistente EcoGuardians. Como posso ajudá-lo hoje?",
+                "agent": "EcoGuardians Assistant",
+                "session_id": session_id
+            })
+
+    except Exception as e:
+        return jsonify({"error": f"Erro interno: {str(e)}"}), 500
+
 @chat_bp.route("/api/ping")
 def ping():
     return jsonify({"status": "ok", "version": "3.2"})
