@@ -9,3 +9,4 @@ supabase
 eventlet
 
 
+beautifulsoup4

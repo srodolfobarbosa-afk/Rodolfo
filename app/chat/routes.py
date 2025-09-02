@@ -568,3 +568,20 @@ def eco_explorer_search():
         return jsonify({"error": f"Erro durante a busca do Eco-Explorer: {str(e)}"}), 500
 
 
+
+
+@chat_bp.route("/api/eco-explorer-history", methods=["GET"])
+def eco_explorer_history():
+    """Endpoint para consultar dados históricos coletados pelo Eco-Explorer"""
+    query_param = request.args.get("query")
+    limit_param = request.args.get("limit", type=int, default=100)
+
+    try:
+        explorer = EcoExplorer()
+        historical_data = explorer.get_historical_data(query=query_param, limit=limit_param)
+        
+        return jsonify({"status": "success", "data": historical_data})
+    except Exception as e:
+        return jsonify({"error": f"Erro ao consultar histórico do Eco-Explorer: {str(e)}"}), 500
+
+
