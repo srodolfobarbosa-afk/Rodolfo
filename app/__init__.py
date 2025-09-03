@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static', static_url_path='')
     CORS(app)  # Habilitar CORS para todas as rotas
 
     # Configurações do aplicativo
@@ -19,10 +19,19 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(proactive_bp, url_prefix="/api")
 
-    # Adicione esta nova rota para a página inicial
+    # Rota para servir o frontend React
     @app.route("/")
-    def index():
-        return "Olá, sua aplicação está no ar!"
+    def serve_frontend():
+        return send_from_directory(app.static_folder, 'index.html')
+
+    # Rota para servir arquivos estáticos do React
+    @app.route("/<path:path>")
+    def serve_static_files(path):
+        try:
+            return send_from_directory(app.static_folder, path)
+        except:
+            # Se o arquivo não for encontrado, serve o index.html (para React Router)
+            return send_from_directory(app.static_folder, 'index.html')
 
     # Rota de ping para verificar o status do servidor
     @app.route("/api/ping", methods=["GET"])
