@@ -8,5 +8,8 @@ openai
 supabase
 eventlet
 beautifulsoup4
-APScheduler
 requests
+selenium
+webdriver_manager
+
+
