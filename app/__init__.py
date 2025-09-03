@@ -3,11 +3,11 @@ from flask_cors import CORS
 import os
 
 def create_app():
-    app = Flask(__name__, static_folder=\'static\', static_url_path=\'/\')
+    app = Flask(__name__, static_folder='static', static_url_path='/')
     CORS(app)  # Habilitar CORS para todas as rotas
 
     # Configurações do aplicativo
-    app.config[\'SECRET_KEY\'] = \'sua_chave_secreta_aqui\'
+    app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
 
     # Importar e registrar Blueprints
     from app.chat.routes import chat_bp
@@ -15,25 +15,25 @@ def create_app():
     from app.auth.routes import auth_bp
     from app.proactive.routes import proactive_bp
 
-    app.register_blueprint(chat_bp, url_prefix=\'/api/chat\')
-    app.register_blueprint(agents_bp, url_prefix=\'/api/agents\')
-    app.register_blueprint(auth_bp, url_prefix=\'/api/auth\')
-    app.register_blueprint(proactive_bp, url_prefix=\'/api\')
+    app.register_blueprint(chat_bp, url_prefix='/api/chat')
+    app.register_blueprint(agents_bp, url_prefix='/api/agents')
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(proactive_bp, url_prefix='/api')
 
     # Rota para servir o frontend React (index.html)
-    @app.route(\'/\')
+    @app.route('/')
     def serve_index():
-        return send_from_directory(app.static_folder, \'index.html\')
+        return send_from_directory(app.static_folder, 'index.html')
 
     # Rota catch-all para o React Router
     @app.errorhandler(404)
     def not_found(e):
-        return send_from_directory(app.static_folder, \'index.html\')
+        return send_from_directory(app.static_folder, 'index.html')
 
     # Rota de ping para verificar o status do servidor
-    @app.route(\'/api/ping\', methods=[\'GET\'])
+    @app.route('/api/ping', methods=['GET'])
     def ping():
-        return \'pong\', 200
+        return 'pong', 200
 
     return app
 
