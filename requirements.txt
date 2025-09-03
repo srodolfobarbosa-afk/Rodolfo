@@ -6,7 +6,6 @@ python-dotenv
 google-generativeai
 openai
 supabase
-eventlet
 beautifulsoup4
 requests
 selenium

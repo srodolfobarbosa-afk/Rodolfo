@@ -101,14 +101,14 @@ if __name__ == "__main__":
     explorer = EcoExplorer()
     print("\n--- Teste de Busca e Análise ---")
     result = explorer.search_and_analyze("inteligência artificial sustentável")
-    print(f"Status da Busca: {result.get("status")}")
-    print(f"Oportunidades Identificadas: {len(result.get("identified_opportunities", []))}")
+    print(f"Status da Busca: {result.get('status')}")
+    print(f"Oportunidades Identificadas: {len(result.get('identified_opportunities', []))}")
     
     print("\n--- Teste de Dados Históricos ---")
     historical_data = explorer.get_historical_data(query="inteligência artificial")
     print(f"Dados Históricos Encontrados: {len(historical_data)}")
     for data in historical_data:
-        print(f"  - Query: {data["query"]}, Título: {data["title"]}")
+        print(f"  - Query: {data['query']}, Título: {data['title']}")
     print("----------------------------")
 
 

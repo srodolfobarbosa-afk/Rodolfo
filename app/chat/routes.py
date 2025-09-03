@@ -1,7 +1,5 @@
 from flask import Blueprint, render_template_string, jsonify, request
-from flask_socketio import emit
 import os
-from app import socketio
 
 chat_bp = Blueprint("chat", __name__)
 
@@ -9,18 +7,6 @@ chat_bp = Blueprint("chat", __name__)
 HTML_TEMPLATE = ''
 CSS_TEMPLATE = ''
 JS_TEMPLATE = ''
-
-# Eventos SocketIO
-@socketio.on("user_message")
-def handle_message(data):
-    user_message = data["message"]
-    agent_id = data["agent_id"]
-
-    # Resposta simples para teste
-    agent_response = f"Olá! Sou o agente {agent_id}. Recebi sua mensagem: '{user_message}'. Como posso ajudá-lo com questões ambientais?"
-
-    # Enviar resposta
-    socketio.emit("agent_response", {"message": agent_response})
 
 # Rotas da API
 @chat_bp.route("/")

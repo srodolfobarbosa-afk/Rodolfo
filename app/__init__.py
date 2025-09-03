@@ -1,8 +1,5 @@
 from flask import Flask
-from flask_socketio import SocketIO
 from flask_cors import CORS
-
-socketio = SocketIO()
 
 def create_app():
     app = Flask(__name__)
@@ -10,8 +7,6 @@ def create_app():
 
     # Configurações do aplicativo
     app.config["SECRET_KEY"] = "sua_chave_secreta_aqui"
-
-    socketio.init_app(app)
 
     # Importar e registrar Blueprints
     from app.chat.routes import chat_bp

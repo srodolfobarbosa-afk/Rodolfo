@@ -38,8 +38,8 @@ if __name__ == "__main__":
     writer = EcoWriter()
     print("\n--- Teste de Geração de Conteúdo ---")
     result = writer.generate_content("benefícios da energia solar", length="curto", style="persuasivo")
-    print(f"Status da Geração: {result.get("status")}")
-    print(f"Conteúdo Gerado: {result.get("content")[:200]}...") # Imprime os primeiros 200 caracteres
+    print(f"Status da Geração: {result.get('status')}")
+    print(f"Conteúdo Gerado: {result.get('content')[:200]}...") # Imprime os primeiros 200 caracteres
     print("----------------------------")
 
 
