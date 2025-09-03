@@ -29,7 +29,11 @@ def create_app():
     # Rota catch-all para o React Router
     @app.errorhandler(404)
     def not_found(e):
-        return send_from_directory(app.static_folder, 'index.html')
+        # A nova lógica abaixo tenta servir o index.html caso a rota não seja da API
+        if not str(e).startswith("404 Not Found: /api/"):
+            return send_from_directory(app.static_folder, 'index.html'), 200
+        # Caso contrário, retorne o erro 404 padrão
+        return e
 
     # Rota de ping para verificar o status do servidor
     @app.route('/api/ping', methods=['GET'])
