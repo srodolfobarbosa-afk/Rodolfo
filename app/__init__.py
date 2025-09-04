@@ -9,7 +9,6 @@ def create_app():
     
     # Configurações do aplicativo
     app.config['SECRET_KEY'] = 'sua_chave_secreta_aqui'
-
     # Importar e registrar Blueprints
     from app.agents.routes import agents_bp
     from app.chat.routes import chat_bp
