@@ -33,5 +33,4 @@ echo "🤖 Inserindo agentes padrão..."
 python insert_default_agents.py
 
 # 6. Inicia o servidor Flask
-echo "🚀 Iniciando o servidor Flask..."
-flask run
+echo "🚀 Iniciando o 
