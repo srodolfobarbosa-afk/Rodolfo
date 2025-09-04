@@ -1,9 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
-
+    return send_from_directory('static', 'index.html')
